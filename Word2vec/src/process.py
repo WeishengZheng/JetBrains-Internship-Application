@@ -22,7 +22,7 @@ def standarization(tokens : list) -> list:
     return [token.lower() for token in tokens]
 
 def removing_stopwords(tokens : list) -> list:
-    return [token for token in tokens if token not in ["in", "the", "is"]]
+    return [token for token in tokens if token not in {"in", "the", "is", "a", "\'s"}]
 
 def tokenizer(text : str) -> list:
     tokens = tokenization(text)

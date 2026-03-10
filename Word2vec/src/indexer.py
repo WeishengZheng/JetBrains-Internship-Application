@@ -1,6 +1,4 @@
-import process
-
-class indexer:
+class Indexer:
     def __init__(self):
         self.idx2token = dict()
         self.token2idx = dict()
@@ -28,9 +26,7 @@ class indexer:
         return self.idx2token[index]
 
 if __name__ == "__main__":
-    #tokens = process.load_tokenizer("/workspaces/JetBrains-Internship-Application/Word2vec/Data/cured_data")
-    basic_indexer = indexer()
-    #basic_indexer.token_indexer(tokens)
-    basic_indexer.index_loader("/workspaces/JetBrains-Internship-Application/Word2vec/Data/tokens_index")
-    print(f"Index of hello: {basic_indexer.getIndex("dvorak")}")
-    print(f"dvorak == {basic_indexer.getToken(11580)}")
+    import process
+    tokens = process.load_tokenizer("/workspaces/JetBrains-Internship-Application/Word2vec/Data/cured_data")
+    basic_indexer = Indexer()
+    basic_indexer.token_indexer(tokens)

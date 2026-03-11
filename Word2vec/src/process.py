@@ -1,3 +1,4 @@
+from collections import Counter
 import re
 
 # Eliminating all the titles from wikitext
@@ -22,7 +23,14 @@ def standarization(tokens : list) -> list:
     return [token.lower() for token in tokens]
 
 def removing_stopwords(tokens : list) -> list:
-    return [token for token in tokens if token not in {"in", "the", "is", "a", "\'s"}]
+    return [token for token in tokens if token not in {"in", "the", "is", "a", "\'s", "\'"}]
+
+def get_low_frequency_words(tokens : list, atLeast = 2) -> list:
+    wordCount = Counter(tokens)
+    return {word for word, count in wordCount.items() if count <= atLeast}
+
+def remove_low_frequency_words(tokens : list, lowFrequencyWords : list) -> list:
+    return [token for token in tokens if token not in lowFrequencyWords]
 
 def tokenizer(text : str) -> list:
     tokens = tokenization(text)
@@ -42,12 +50,23 @@ def load_data(path : str, paragraph_split = True) -> list:
 
 def data_process():
     with open("../Data/no_labels_dataset", "r") as noLabelDataSet, \
-         open("../Data/cured_data", "w") as curedData:
+         open("../Data/standarized_data", "w") as standarizedData:
         for lines in noLabelDataSet:
             tokens = tokenizer(lines)
             for token in tokens:
+                standarizedData.write(f"{token} ")
+            standarizedData.write('\n')
+
+    tokens = load_data("../Data/standarized_data", paragraph_split=False)     
+    lowFrequencyWords = get_low_frequency_words(tokens)
+    with open("../Data/standarized_data", "r") as standarizedData, \
+         open("../Data/cured_data", "w") as curedData:
+        for lines in standarizedData:
+            tokens = remove_low_frequency_words(lines.split(), lowFrequencyWords)
+            for token in tokens:
                 curedData.write(f"{token} ")
             curedData.write('\n')
+            
 
 
 if __name__ == "__main__":

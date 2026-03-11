@@ -30,9 +30,14 @@ def tokenizer(text : str) -> list:
     tokens = removing_stopwords(tokens)
     return tokens
 
-def load_tokenizer(path : str) -> list:
+def load_data(path : str, paragraph_split = True) -> list:
     with open(path, "r") as curedData:
-        return curedData.read().split();
+        if paragraph_split:
+            data = list()
+            for paragraph in curedData.split('\n'):
+                data.append(paragraph.split(' '))
+        else:
+            return curedData.read().split()
 
 def data_process():
     with open("../Data/no_labels_dataset", "r") as noLabelDataSet, \

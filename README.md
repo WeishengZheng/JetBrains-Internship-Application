@@ -19,9 +19,10 @@ Tomas Mikolov, Kai Chen, Greg Corrado, Jeffrey Dean](https://arxiv.org/pdf/1301.
     - Tokenization
     - Lowercasting
     - Removing Stopwords
-- Indexer
+    - Removing low frequency words
+- Indexer (Vocabulary)
     - Token to index
     - Index to token
 - CBOW implementation
-
+    - Training
 

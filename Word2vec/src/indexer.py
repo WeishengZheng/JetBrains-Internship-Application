@@ -2,6 +2,7 @@ class Indexer:
     def __init__(self):
         self.idx2token = dict()
         self.token2idx = dict()
+        self.unique_tokens = None
 
     def token_indexer(self, tokens : list):
         self.unique_tokens = list(set(tokens))

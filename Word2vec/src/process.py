@@ -34,7 +34,7 @@ def load_data(path : str, paragraph_split = True) -> list:
     with open(path, "r") as curedData:
         if paragraph_split:
             data = list()
-            for paragraph in curedData.split('\n'):
+            for paragraph in curedData.read().split('\n'):
                 data.append(paragraph.split(' '))
         else:
             return curedData.read().split()

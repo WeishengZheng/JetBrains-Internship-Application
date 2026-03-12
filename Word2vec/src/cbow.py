@@ -1,24 +1,23 @@
 import indexer
 import process
+import backpropagation as bp
 import numpy as np
 
 class Word2vec:
     def __init__(self, window = 2, embeddings = 300):
         self.window = window
         self.embeddings = embeddings
-        self.weight_matrix = None
         self.idxr = None
+        self.neural_network = None
 
     def _create_weight_matrix(self, unique_tokens : list):
-        self.weight_matrix = np.random.rand(len(unique_tokens), self.embeddings)
+        self.neural_network = bp.NeuralNetwork(self.embeddings, len(unique_tokens))
 
     def add_vocabulary(self, idxr : indexer.Indexer):
         self.idxr = idxr
         self._create_weight_matrix(idxr.getUniqueTokensList())
 
     def training(self, training_material):
-        if self.idxr == None: 
-            print("There is no indexer or weight_matrix in the model")
         for p in training_material:
             paragraph = list()
             for tokens in p:
@@ -28,6 +27,8 @@ class Word2vec:
             for i in range(self.window, len(paragraph) - self.window):
                 input_vector = np.array([paragraph[j+i-self.window] for j in range(self.window*2 + 1) if j != self.window], np.int32)
                 output_Vector = np.array([paragraph[i]], np.int32)
+                prediction = self.neural_network.prediction(input_vector)
+                
 
 
 

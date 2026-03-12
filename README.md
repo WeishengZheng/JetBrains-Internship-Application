@@ -13,6 +13,7 @@ Sources:
 Tomas Mikolov, Kai Chen, Greg Corrado, Jeffrey Dean](https://arxiv.org/pdf/1301.3781)
 
 [Word2vec with gensim](https://www.geeksforgeeks.org/nlp/word2vec-with-gensim/)
+[Backpropagation](https://www.geeksforgeeks.org/machine-learning/backpropagation-in-neural-network/)
 
 ### Implementation path
 - Data processing
@@ -24,5 +25,5 @@ Tomas Mikolov, Kai Chen, Greg Corrado, Jeffrey Dean](https://arxiv.org/pdf/1301.
     - Token to index
     - Index to token
 - CBOW implementation
-    - Training
+    - Backpropagation
 

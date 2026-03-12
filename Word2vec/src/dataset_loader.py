@@ -7,5 +7,5 @@ def load_and_storage():
         for i in dataset:
             f.write(i["text"])
 
-if __name__ == "__mian__":
+if __name__ == "__main__":
     load_and_storage()

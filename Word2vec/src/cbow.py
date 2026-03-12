@@ -26,8 +26,8 @@ class Word2vec:
             paragraph = np.array(paragraph, np.int32)
 
             for i in range(self.window, len(paragraph) - self.window):
-                inputVector = np.array([paragraph[j+i-self.window] for j in range(self.window*2 + 1) if j != self.window], np.int32)
-                outputVector = np.array([paragraph[i]], np.int32)
+                input_vector = np.array([paragraph[j+i-self.window] for j in range(self.window*2 + 1) if j != self.window], np.int32)
+                output_Vector = np.array([paragraph[i]], np.int32)
 
 
 

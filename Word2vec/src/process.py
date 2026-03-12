@@ -4,10 +4,10 @@ import re
 # Eliminating all the titles from wikitext
 def dataset_cleaning():
     with open("../Data/dataset", "r") as dataset, \
-         open("../Data/no_labels_dataset", "w") as noLableDataset:
+         open("../Data/no_labels_dataset", "w") as no_lable_dataset:
         for lines in dataset:
             if '=' not in lines:
-                noLableDataset.write(lines)
+                no_lable_dataset.write(lines)
 
 def tokenization(text : str) -> list:
     text = text.split(" ")
@@ -25,12 +25,12 @@ def standarization(tokens : list) -> list:
 def removing_stopwords(tokens : list) -> list:
     return [token for token in tokens if token not in {"in", "the", "is", "a", "\'s", "\'"}]
 
-def get_low_frequency_words(tokens : list, atLeast = 2) -> list:
-    wordCount = Counter(tokens)
-    return {word for word, count in wordCount.items() if count <= atLeast}
+def get_low_frequency_words(tokens : list, at_least = 2) -> list:
+    word_count = Counter(tokens)
+    return {word for word, count in word_count.items() if count <= at_least}
 
-def remove_low_frequency_words(tokens : list, lowFrequencyWords : list) -> list:
-    return [token for token in tokens if token not in lowFrequencyWords]
+def remove_low_frequency_words(tokens : list, low_frequency_words : list) -> list:
+    return [token for token in tokens if token not in low_frequency_words]
 
 def tokenizer(text : str) -> list:
     tokens = tokenization(text)
@@ -39,33 +39,33 @@ def tokenizer(text : str) -> list:
     return tokens
 
 def load_data(path : str, paragraph_split = True) -> list:
-    with open(path, "r") as curedData:
+    with open(path, "r") as cured_data:
         if paragraph_split:
             data = list()
-            for paragraph in curedData.read().split('\n'):
+            for paragraph in cured_data.read().split('\n'):
                 data.append(paragraph.split(' '))
             return data
         else:
-            return curedData.read().split()
+            return cured_data.read().split()
 
 def data_process():
-    with open("../Data/no_labels_dataset", "r") as noLabelDataSet, \
-         open("../Data/standarized_data", "w") as standarizedData:
-        for lines in noLabelDataSet:
+    with open("../Data/no_labels_dataset", "r") as no_label_dataset, \
+         open("../Data/standarized_data", "w") as standarized_data:
+        for lines in no_label_dataset:
             tokens = tokenizer(lines)
             for token in tokens:
-                standarizedData.write(f"{token} ")
-            standarizedData.write('\n')
+                standarized_data.write(f"{token} ")
+            standarized_data.write('\n')
 
     tokens = load_data("../Data/standarized_data", paragraph_split=False)     
-    lowFrequencyWords = get_low_frequency_words(tokens)
-    with open("../Data/standarized_data", "r") as standarizedData, \
-         open("../Data/cured_data", "w") as curedData:
-        for lines in standarizedData:
-            tokens = remove_low_frequency_words(lines.split(), lowFrequencyWords)
+    low_frequency_words = get_low_frequency_words(tokens)
+    with open("../Data/standarized_data", "r") as standarized_data, \
+         open("../Data/cured_data", "w") as cured_data:
+        for lines in standarized_data:
+            tokens = remove_low_frequency_words(lines.split(), low_frequency_words)
             for token in tokens:
-                curedData.write(f"{token} ")
-            curedData.write('\n')
+                cured_data.write(f"{token} ")
+            cured_data.write('\n')
             
 
 

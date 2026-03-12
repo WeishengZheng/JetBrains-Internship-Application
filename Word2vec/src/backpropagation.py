@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 class NeuralNetwork:
     def __init__(self, embeddings_size : int, vocabulary_size : int):
@@ -8,6 +9,14 @@ class NeuralNetwork:
         self.w_input= np.random.randn(vocabulary_size, embeddings_size) * 0.01
         self.w_output = np.random.randn(embeddings_size, vocabulary_size) * 0.01
 
+        self.grad_in_acc = np.zeros((vocabulary_size, embeddings_size))
+        self.grad_out_acc = np.zeros((embeddings_size, vocabulary_size))
+
+        self.counter = 0
+        self.n_batch = 0
+        self.loss_acc = 0
+        self.first_loss = 0
+
     def softmax(self, logits):
         exp_logits = np.exp(logits - np.max(logits))
         return exp_logits / np.sum(exp_logits)
@@ -15,7 +24,7 @@ class NeuralNetwork:
     def foward(self, input_vector):
         input_hidden = np.mean(self.w_input[input_vector], axis = 0)
         logits = np.dot(input_hidden, self.w_output)
-        return self.softmax(logits)
+        return self.softmax(logits), input_hidden
 
     def multiclass_cross_entropy_loss(self, probabilities, target_id : int):
         return -np.log(probabilities[target_id] + 1e-9)
@@ -25,13 +34,41 @@ class NeuralNetwork:
         probabilities[target_id] -= 1
         return probabilities
     
-    def update_weight(self, input_vector, output_error, learning_rate):
-        gradient_w_in = np.dot(self.w_output, output_error)
-        gradient_w_out = np.outer(self.w_input, output_error)
+    def train_sample(self, input_vector, target_id : int, batch_size, learning_rate : float, terminal = False):
+        self.counter += 1
+        probabilities, hidden = self.foward(input_vector)
+        self.loss_acc += self.multiclass_cross_entropy_loss(probabilities, target_id)
+        output_error = self.calculate_output_error(probabilities, target_id)
+        self.update_acc_gradients(output_error, hidden, input_vector)
+        if self.counter >= batch_size:
+            if terminal: self.print_terminal(batch_size, learning_rate)
+            self.update_weights(learning_rate)
 
-        self.w_output -= learning_rate * gradient_w_out
-        n_inputs = len(input_vector)
-        self.w_input[input_vector] -= learning_rate * (gradient_w_in / n_inputs)
+    def print_terminal(self, batch_size, learning_rate):
+        print("[Backpropagation learning results]")
+        print("Batch"+f"(size:{batch_size})"+":", self.n_batch)
+        print("Acc loss:", self.loss_acc / batch_size)
+        if self.n_batch == 0: self.first_loss = self.loss_acc / batch_size 
+        else: print("Diff with first batch loss:", self.loss_acc / batch_size - self.first_loss)
+        print("Learning rate:", learning_rate)
+        print("Timestamp:", time.time()//1)
+        
+
+    def update_acc_gradients(self, output_error, hidden, input_vector):
+        self.grad_in_acc[input_vector] += np.dot(self.w_output, output_error) / len(input_vector)
+        self.grad_out_acc += np.outer(hidden, output_error)
+    
+    def update_weights(self, learning_rate : float):
+        self.w_output -= learning_rate * (self.grad_out_acc / self.counter)
+        self.w_input -= learning_rate * (self.grad_in_acc / self.counter)
+        self.grad_in_acc = np.zeros((self.vocabulary_size, self.embeddings_size))
+        self.grad_out_acc = np.zeros((self.embeddings_size, self.vocabulary_size))
+        self.loss_acc = 0
+        self.counter = 0
+        self.n_batch += 1
+
+    def end(self, learning_rate, batch_size):
+        self.update_weights(learning_rate * (self.counter / batch_size))
     
     def prediction(self, input_vector : list) -> int:
         return np.argmax(self.foward(input_vector))

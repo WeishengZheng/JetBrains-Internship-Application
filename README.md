@@ -27,4 +27,8 @@ Tomas Mikolov, Kai Chen, Greg Corrado, Jeffrey Dean](https://arxiv.org/pdf/1301.
     - Index to token
 - CBOW implementation
     - Backpropagation
+        - Foward pass
+        - Loss
+        - Gradients
+        - Parameters update
 

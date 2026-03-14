@@ -23,10 +23,6 @@ class Word2vec:
     def load_weights(self, path : str):
         self.neural_network.load_weights(path)
 
-    def print_on_log(self, message : str):
-        with open("./traning_log", "a") as log:
-            log.write(f"{message}\n")
-
     def training(self, training_material, batch_size, learning_rate, epoach):
         for n_epoach in range(epoach):
             for p in training_material:

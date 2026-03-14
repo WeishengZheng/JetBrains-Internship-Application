@@ -16,6 +16,7 @@ class NeuralNetwork:
         self.n_batch = 0
         self.loss_acc = 0
         self.first_loss = 0
+        self.first_timestamp = 0
 
     def softmax(self, logits):
         exp_logits = np.exp(logits - np.max(logits))
@@ -45,15 +46,25 @@ class NeuralNetwork:
             self.update_weights(learning_rate)
 
     def print_terminal(self, batch_size, learning_rate):
+        loss = self.loss_acc / batch_size
+        time_now = time.time()//1
         print("[Backpropagation learning results]")
         print("Batch"+f"(size:{batch_size})"+":", self.n_batch)
-        print("Acc loss:", self.loss_acc / batch_size)
-        if self.n_batch == 0: self.first_loss = self.loss_acc / batch_size 
-        else: print("Diff with first batch loss:", self.loss_acc / batch_size - self.first_loss)
+        print("Loss:", loss)
+        if self.n_batch == 0:
+            self.first_loss = loss
+            self.first_timestamp = time_now
+        else: 
+            print("Diff with first batch loss:", loss - self.first_loss)
         print("Learning rate:", learning_rate)
-        print("Timestamp:", time.time()//1)
-        
+        print("Timestamp:", time_now)
+        print("Seconds pass since first batch:", time_now - self.first_timestamp)
+        self.print_on_stats(f"{loss} {time_now}")
 
+    def print_on_stats(self, message : str):
+        with open("./traning_stats", "a") as log:
+            log.write(f"{message}\n")
+        
     def update_acc_gradients(self, output_error, hidden, input_vector):
         self.grad_in_acc[input_vector] += np.dot(self.w_output, output_error) / len(input_vector)
         self.grad_out_acc += np.outer(hidden, output_error)
@@ -66,6 +77,18 @@ class NeuralNetwork:
         self.loss_acc = 0
         self.counter = 0
         self.n_batch += 1
+
+    def save_weights(self, path : str):
+        with open(f"{path}/w_in.npy", "wb") as w_in_file, \
+             open(f"{path}/w_out.npy", "wb") as w_out_file:
+            np.save(w_in_file, self.w_input)
+            np.save(w_out_file, self.w_output)
+
+    def load_weights(self, path : str):
+        with open(f"{path}/w_in.npy", "rb") as w_in_file, \
+             open(f"{path}/w_out.npy", "rb") as w_out_file:
+            self.w_input = np.load(w_in_file)
+            self.w_output = np.load(w_out_file)
 
     def end(self, learning_rate, batch_size):
         self.update_weights(learning_rate * (self.counter / batch_size))

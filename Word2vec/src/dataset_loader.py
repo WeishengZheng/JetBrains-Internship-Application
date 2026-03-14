@@ -1,5 +1,4 @@
 from datasets import load_dataset
-import re
 
 def load_and_storage():
     with open("../Data/dataset", "w") as f:

@@ -51,7 +51,7 @@ The dataset used for training process is from the popular [Hugging Face Dataset 
 |Batch|32|
 |Learning rate|0.1|
 ## Results
-![table](Word2vec/Img/Experiment_results.png)
+![Plot](Word2vec/Experimentation_Files/Experiment_1/Img/Experiment_results.png)
 
 |Stats||
 |---|---|

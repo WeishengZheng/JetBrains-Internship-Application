@@ -2,9 +2,9 @@ from collections import Counter
 import re
 
 # Eliminating all the titles from wikitext
-def dataset_cleaning():
-    with open("../Data/dataset", "r") as dataset, \
-         open("../Data/no_labels_dataset", "w") as no_lable_dataset:
+def dataset_cleaning(source_file : str, destination_file : str):
+    with open(source_file, "r") as dataset, \
+         open(destination_file, "w") as no_lable_dataset:
         for lines in dataset:
             if '=' not in lines:
                 no_lable_dataset.write(lines)
@@ -48,19 +48,19 @@ def load_data(path : str, paragraph_split = True) -> list:
         else:
             return cured_data.read().split()
 
-def data_process():
-    with open("../Data/no_labels_dataset", "r") as no_label_dataset, \
-         open("../Data/standarized_data", "w") as standarized_data:
+def data_process(source_file : str, destination_folder : str):
+    with open(source_file, "r") as no_label_dataset, \
+         open(f"{destination_folder}/standarized_data", "w") as standarized_data:
         for lines in no_label_dataset:
             tokens = tokenizer(lines)
             for token in tokens:
                 standarized_data.write(f"{token} ")
             standarized_data.write('\n')
 
-    tokens = load_data("../Data/standarized_data", paragraph_split=False)     
+    tokens = load_data(f"{destination_folder}/standarized_data", paragraph_split=False)     
     low_frequency_words = get_low_frequency_words(tokens)
-    with open("../Data/standarized_data", "r") as standarized_data, \
-         open("../Data/cured_data", "w") as cured_data:
+    with open(f"{destination_folder}/standarized_data", "r") as standarized_data, \
+         open(f"{destination_folder}/cured_data", "w") as cured_data:
         for lines in standarized_data:
             tokens = remove_low_frequency_words(lines.split(), low_frequency_words)
             for token in tokens:
@@ -70,5 +70,5 @@ def data_process():
 
 
 if __name__ == "__main__":
-    dataset_cleaning()
-    data_process()
+    dataset_cleaning("../Data/dataset", "../Data/no_labels_dataset")
+    data_process("../Data/no_labels_dataset", "../Data")

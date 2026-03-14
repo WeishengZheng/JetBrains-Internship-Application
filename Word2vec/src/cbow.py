@@ -1,5 +1,5 @@
 import indexer
-import process
+import Word2vec.src.preprocess as preprocess
 import backpropagation as bp
 import numpy as np
 
@@ -48,5 +48,5 @@ if __name__ == "__main__":
     basic_indexer = indexer.Indexer()
     basic_indexer.index_loader("/workspaces/JetBrains-Internship-Application/Word2vec/Data/tokens_index")
     word2vec.add_vocabulary(basic_indexer)
-    word2vec.training(process.load_data("/workspaces/JetBrains-Internship-Application/Word2vec/Data/cured_data"), 32, 0.1, 1)
+    word2vec.training(preprocess.load_data("/workspaces/JetBrains-Internship-Application/Word2vec/Data/cured_data"), 32, 0.1, 1)
     word2vec.save_weights("/workspaces/JetBrains-Internship-Application/Word2vec/Data")

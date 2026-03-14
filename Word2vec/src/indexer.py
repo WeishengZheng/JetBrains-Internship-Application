@@ -40,7 +40,7 @@ class Indexer:
         return self.unique_tokens.copy()
 
 if __name__ == "__main__":
-    import process
-    tokens = process.load_data("/workspaces/JetBrains-Internship-Application/Word2vec/Data/cured_data", paragraph_split=False)
+    import Word2vec.src.preprocess as preprocess
+    tokens = preprocess.load_data("/workspaces/JetBrains-Internship-Application/Word2vec/Data/cured_data", paragraph_split=False)
     basic_indexer = Indexer()
     basic_indexer.token_indexer(tokens)

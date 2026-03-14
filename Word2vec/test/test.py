@@ -1,4 +1,4 @@
-import src.process as process
+import Word2vec.src.preprocess as preprocess
 import src.indexer as indexer
 # python3 -m pytest test/test.py
 
@@ -7,7 +7,7 @@ def test_tokenizer():
     
     expected = ['hello', 'given', 'hue', "it's", '#']
 
-    result = process.tokenizer(text)
+    result = preprocess.tokenizer(text)
 
     assert result == expected
 
